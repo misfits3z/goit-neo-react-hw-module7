@@ -1,12 +1,14 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore } from "@reduxjs/toolkit";
+import contactsReducer from './contactSlice'
+import filtersReducer from './filtersSlice'
 
-// Приклад slice (можна додати більше пізніше)
-import exampleSlice from './exampleSlice';
 
+// Створюємо store за допомогою configureStore
 const store = configureStore({
     reducer: {
-        example: exampleSlice, // Додайте сюди інші ред'юсери
+      contacts: contactsReducer,
+      filters: filtersReducer,
     },
-});
-
-export default store;
+  });
+  
+  export default store
