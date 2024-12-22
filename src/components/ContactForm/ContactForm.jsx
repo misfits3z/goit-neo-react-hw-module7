@@ -3,7 +3,7 @@ import css from './ContactForm.module.css'
 import { nanoid } from 'nanoid'
 import * as Yup from "yup";
 import { useDispatch } from 'react-redux';
-import { addContact } from '../../redux/contactSlice' 
+import { addContact } from '../../redux/contactsOps' 
 
 
 export default function ContactForm() {

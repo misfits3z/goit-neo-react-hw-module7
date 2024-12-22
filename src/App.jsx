@@ -1,49 +1,40 @@
 import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import SearchBox from './components/SearchBox/SearchBox';
 import ContactList from './components/ContactList/ContactList';
 import ContactForm from './components/ContactForm/ContactForm';
-import './App.css';
-import { useDispatch, useSelector } from 'react-redux';
 import { selectContacts } from './redux/contactSlice';
-// import { addContact, deleteContact } from './redux/contactSlice'; 
-// import { changeFilter } from './redux/filtersSlice'; 
+import { fetchContacts } from './redux/contactsOps';
+import './App.css';
 
 function App() {
-  const contacts = useSelector((state) => state.contacts.items); // Список контактів
-  const nameFilter = useSelector((state) => state.filters.name); // Фільтр
   const dispatch = useDispatch();
 
+  // Селектори
+  const contacts = useSelector(selectContacts);
+  const error = useSelector((state) => state.contacts.error);
+  const isLoading = useSelector((state) => state.contacts.isLoading); 
+
+  // Завантаження контактів при першому рендері
   useEffect(() => {
-    const savedContacts = localStorage.getItem('contacts');
-    if (savedContacts) {
-      dispatch(selectContacts(JSON.parse(savedContacts)));
-    }
+    dispatch(fetchContacts());
   }, [dispatch]);
-
-  // const handleAddContact = (newContact) => {
-  //   dispatch(addContact(newContact)); // Додаємо контакт через Redux
-  // };
-
-  // const handleDeleteContact = (id) => {
-  //   dispatch(deleteContact(id)); // Видаляємо контакт через Redux
-  // };
-
-  // const handleFilterChange = (evt) => {
-  //   dispatch(changeFilter(evt.target.value))
-  // };
-
-  // const filteredContacts = contacts.filter((contact) =>
-  //   contact.name.toLowerCase().includes(nameFilter.toLowerCase()) 
-  // );
 
   return (
     <div>
       <h1>Phonebook</h1>
-      <ContactForm />
-      <SearchBox/> 
-      <ContactList />
+      {error && <p style={{ color: 'red' }}>Error: {error}</p>}
+      {isLoading && !error && <p>Loading...</p>}
+      {!isLoading && !error && (
+        <>
+          <ContactForm />
+          {contacts.length > 0 && <SearchBox />}
+          <ContactList />
+        </>
+      )}
     </div>
   );
 }
+
 
 export default App;
